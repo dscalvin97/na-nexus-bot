@@ -128,8 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# config containing token
-config.json
+# for config and other data files
+*.json
 
 # VS Code
 .vscode/

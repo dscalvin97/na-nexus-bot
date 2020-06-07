@@ -1,0 +1,5 @@
+{
+    "token": "your bot token",
+    "bot_prefix": "bot command prefix",
+    "extensions": ["your list of extensions"]
+}

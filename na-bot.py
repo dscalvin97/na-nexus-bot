@@ -2,16 +2,21 @@ import discord
 import json
 import traceback
 import sys
+import asyncio
 
 from discord.ext import commands
 
+# load config file
+with open('config.json') as config_file:
+    config = json.load(config_file)
+
 # bot initialization
-bot = commands.Bot(command_prefix='$', case_insensitive=True)
+bot = commands.Bot(command_prefix=config['bot_prefix'], case_insensitive=True)
 
-# list of cogs to be loaded
-initial_extensions = ['cogs.modulemgr', 'cogs.greeting', 'cogs.rolemgr']#, 'cogs.role-management']
+# list of extensions to be loaded
+initial_extensions = config['extensions']
 
-# loading of cogs
+# loading of extensions
 if __name__ == '__main__':
     for extension in initial_extensions:
         try:
@@ -25,25 +30,8 @@ if __name__ == '__main__':
 @bot.event
 async def on_ready():
     print(f'Logged in as: {bot.user.name}\nWith ID: {bot.user.id}')
-    return await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='for screams of agony'))
+    return await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='for howls of pain'))
 
-# ping
-@bot.command()
-async def ping(ctx):
-    await ctx.send('pong')
-
-# used to clean up messages with matching content(not working yet)
-@bot.command()
-async def Cleanup(ctx, targetMessage):
-    for message in ctx.message.channel.history():
-        if message.content == targetMessage:
-            print(targetMessage.id)
-        else:
-            print("Not found")
-
-# load token from config file(will later come to include other important data, like webhook tokens, etc.)
-with open('config.json') as config_file:
-    data = json.load(config_file)
-TOKEN = data["token"]
+TOKEN = config['token']
 
 bot.run(TOKEN)
