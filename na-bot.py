@@ -4,14 +4,17 @@ import traceback
 import sys
 import asyncio
 
-from discord.ext import commands
+import authentication
 
-# load config file
+
+# load config and auth files
+auth_file = open('auth.json', 'r+')
 with open('config.json') as config_file:
     config = json.load(config_file)
 
 # bot initialization
-bot = commands.Bot(command_prefix=config['bot_prefix'], case_insensitive=True)
+bot = authentication.Bot(auth_file=auth_file, command_prefix=config['bot_prefix'], case_insensitive=True)
+bot.add_check(authentication.AuthCheck)
 
 # list of extensions to be loaded
 initial_extensions = config['extensions']

@@ -1,0 +1,11 @@
+{
+    "permissions": {
+        "extension name": {
+            "default": ["role id"],
+            "command name": ["role id"]
+        }
+    },
+    "whitelist": {
+        "role id": ["user id"]
+    }
+}
