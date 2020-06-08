@@ -7,13 +7,12 @@ import asyncio
 import authentication
 
 
-# load config and auth files
-auth_file = open('auth.json', 'r+')
+# load config file
 with open('config.json') as config_file:
     config = json.load(config_file)
 
 # bot initialization
-bot = authentication.Bot(auth_file=auth_file, command_prefix=config['bot_prefix'], case_insensitive=True)
+bot = authentication.Bot(auth_path='auth.json', command_prefix=config['bot_prefix'], case_insensitive=True)
 bot.add_check(authentication.AuthCheck)
 
 # list of extensions to be loaded

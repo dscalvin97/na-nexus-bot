@@ -24,15 +24,15 @@ def AuthCheck(ctx):
     return bool(authorized_roles.intersection(author_roles))
 
 class Bot(commands.Bot):
-    def __init__(self, command_prefix, auth_file=None, help_command=commands.bot._default, description=None, **options):
+    def __init__(self, command_prefix, auth_path=None, help_command=commands.bot._default, description=None, **options):
         super().__init__(command_prefix, help_command=help_command, description=description, **options)
-        self.auth_file = auth_file
+        self.auth_path = auth_path
         self.load_auth()
 
     def load_auth(self):
-        self.auth = json.load(self.auth_file)
+        with open(self.auth_path) as f:
+            self.auth = json.load(f)
     
     def save_auth(self):
-        self.auth_file.seek(0)
-        self.auth_file.write(json.dump(auth))
-        self.auth_file.flush()
+        with open(self.auth_path, 'w') as f:
+            json.dump(self.auth, f)
