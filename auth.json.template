@@ -1,11 +1,11 @@
 {
     "permissions": {
         "extension name": {
-            "default": ["role id"],
-            "command name": ["role id"]
+            "default": [role id],
+            "command name": [role id]
         }
     },
     "whitelist": {
-        "user id": ["role id"]
+        "user id": [role id]
     }
 }
