@@ -6,6 +6,6 @@
         }
     },
     "whitelist": {
-        "role id": ["user id"]
+        "user id": ["role id"]
     }
 }

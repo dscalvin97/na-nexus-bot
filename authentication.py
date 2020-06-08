@@ -12,7 +12,11 @@ def AuthCheck(ctx):
     if not authorized_roles: return True
 
     # get the author's roles and return True if there is an intersection with the authorized roles.
-    author_roles = set([str(role.id) for role in ctx.message.author.roles] + [role for role in ctx.bot.auth['whitelist'] if ctx.message.author.id in ctx.bot.auth['whitelist'][role]])
+    author_roles = set([str(role.id) for role in ctx.message.author.roles])
+    print(author_roles)
+    if ctx.message.author.id in ctx.bot.auth['whitelist']: 
+        author_roles.update(ctx.bot.auth['whitelist'][ctx.message.author.id])
+    print(author_roles)
     return bool(authorized_roles.intersection(author_roles))
 
 class Bot(commands.Bot):
