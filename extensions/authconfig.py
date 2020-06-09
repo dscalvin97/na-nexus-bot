@@ -13,7 +13,7 @@ class AuthConfig(commands.Cog):
         """View Permission Json"""
         await ctx.send(f'```{json.dumps(ctx.bot.auth)}```')
     
-    @commands.command()
+    @commands.command(aliases=['ReloadPerms'])
     async def LoadPerms(self, ctx):
         """Load Permissions"""
         ctx.bot.load_auth()
