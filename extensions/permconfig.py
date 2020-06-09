@@ -4,25 +4,25 @@ import json
 from discord.ext import commands
 
 # Provides Hot-Configurable User Authentication
-class AuthConfig(commands.Cog):
+class PermConfig(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
     @commands.command()
     async def ViewPerms(self, ctx):
         """View Permission Json"""
-        await ctx.send(f'```{json.dumps(ctx.bot.auth)}```')
+        await ctx.send(f'```{json.dumps(ctx.bot.perms)}```')
     
     @commands.command(aliases=['ReloadPerms'])
     async def LoadPerms(self, ctx):
         """Load Permissions"""
-        ctx.bot.load_auth()
+        ctx.bot.load_perms()
         await ctx.send('Loaded Permissions from File')
     
     @commands.command()
     async def SavePerms(self, ctx):
         """Save Permissions"""
-        ctx.bot.save_auth()
+        ctx.bot.save_perms()
         await ctx.send('Saved Permissions to File')
     
     @commands.command()
@@ -33,7 +33,7 @@ class AuthConfig(commands.Cog):
             member: Member to set whitelist roles.
             roles: Roles to whitelist.
         """
-        whitelist = ctx.bot.auth['whitelist']
+        whitelist = ctx.bot.perms['whitelist']
         whitelist[str(member.id)] = [role.id for role in roles]
         
         await ctx.send(f'Set whitelists for {member.display_name}.')
@@ -48,8 +48,8 @@ class AuthConfig(commands.Cog):
         """
         command = ctx.bot.get_command(command_name)
         if command:
-            permissions = ctx.bot.auth['permissions']
-            permissions[command.cog_name][command.name] = [role.id for role in roles]
+            cogs = ctx.bot.perms['cogs']
+            cogs[command.cog_name][command.name] = [role.id for role in roles]
             
             await ctx.send(f'Set permissions for command {command.name}.')
         else:
@@ -65,15 +65,15 @@ class AuthConfig(commands.Cog):
         """
         cog = ctx.bot.get_cog(cog_name)
         if cog:
-            permissions = ctx.bot.auth['permissions']
-            permissions[cog.name]['__default__'] = [role.id for role in roles]
+            cogs = ctx.bot.perms['cogs']
+            cogs[command.cog_name]['__default__'] = [role.id for role in roles]
             
             await ctx.send(f'Set permissions for cog {cog.name}.')
         else:
             await ctx.send(f'No such cog {cog_name}.')
     
 def setup(bot):
-    bot.add_cog(AuthConfig(bot))
+    bot.add_cog(PermConfig(bot))
 
 def teardown(bot):
     pass

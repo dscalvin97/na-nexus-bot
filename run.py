@@ -4,7 +4,7 @@ import traceback
 import sys
 import asyncio
 
-import authentication
+import na_bot
 
 
 # load config file
@@ -12,8 +12,8 @@ with open('config.json') as config_file:
     config = json.load(config_file)
 
 # bot initialization
-bot = authentication.Bot(auth_path='auth.json', command_prefix=config['bot_prefix'], case_insensitive=True)
-bot.add_check(authentication.AuthCheck)
+bot = na_bot.Bot(perm_path='perms.json', command_prefix=config['bot_prefix'], case_insensitive=True)
+bot.add_check(na_bot.PermCheck)
 
 # list of extensions to be loaded
 initial_extensions = config['extensions']
