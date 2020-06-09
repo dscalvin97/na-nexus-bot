@@ -4,7 +4,7 @@ import traceback
 import sys
 import asyncio
 
-import na_bot
+import discordbot
 
 
 # load config file
@@ -12,8 +12,8 @@ with open('config.json') as config_file:
     config = json.load(config_file)
 
 # bot initialization
-bot = na_bot.Bot(perm_path='perms.json', command_prefix=config['bot_prefix'], case_insensitive=True)
-bot.add_check(na_bot.PermCheck)
+bot = discordbot.Bot(perm_path='perms.json', command_prefix=config['bot_prefix'], case_insensitive=True)
+bot.add_check(discordbot.PermCheck)
 
 # list of extensions to be loaded
 initial_extensions = config['extensions']
