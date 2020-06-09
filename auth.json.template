@@ -1,6 +1,6 @@
 {
     "permissions": {
-        "extension name": {
+        "cog name": {
             "default": [role id],
             "command name": [role id]
         }
