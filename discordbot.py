@@ -6,8 +6,8 @@ from discord.ext import commands
 
 def PermCheck(ctx):
     # override for owner in case of error
-    # if commands.is_owner():
-    #    return True
+    if commands.is_owner():
+        return True
 
     # get permissions tables
     command_perms = ctx.bot.db.table('command-permissions')
