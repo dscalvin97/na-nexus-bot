@@ -1,39 +1,54 @@
 import discord
 import sys
+import math
 import traceback
 
 from discord.ext import commands
 
+
 async def on_command_error(ctx, error):
+    # if command has local error handler, return
     if hasattr(ctx.command, 'on_error'):
         return
-    
-    ignored = (commands.CommandNotFound, commands.UserInputError)
+
+    # get the original exception
     error = getattr(error, 'original', error)
-    
-    if isinstance(error, ignored):
+
+    if isinstance(error, commands.CommandNotFound):
+        return await ctx.send('There is no such command.')
+
+    if isinstance(error, commands.DisabledCommand):
+        return await ctx.send('This command has been disabled.')
+
+    if isinstance(error, commands.CommandOnCooldown):
+        await ctx.send(f'This command is on cooldown, please retry in {math.ceil(error.retry_after)}s.')
         return
 
-    elif isinstance(error, commands.DisabledCommand):
-        return await ctx.send(f'{ctx.command} has been disabled.')
+    if isinstance(error, commands.UserInputError):
+        await ctx.send(f'Invalid input. Use {ctx.bot.command_prefix}help {ctx.command.name} to see the correct usage.')
+        return
 
-    elif isinstance(error, commands.NoPrivateMessage):
+    if isinstance(error, commands.NoPrivateMessage):
         try:
-            return await ctx.send(f'{ctx.command} can not be used in Private Messages.')
-        except:
+            return await ctx.author.send('This command cannot be used in direct messages.')
+        except discord.Forbidden:
             pass
 
-    elif isinstance(error, commands.BadArgument):
-        return await ctx.send(f'You had faulty arguments. Use {ctx.bot.command_prefix}help command to see correct usage.')
+    if isinstance(error, commands.CheckFailure):
+        await ctx.send('You do not have permission to use this command.')
+        return
 
-    elif isinstance(error, commands.CheckFailure):
-        return await ctx.send('You have insufficient permission to run this command.')
-    
-    print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
-    traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+    # ignore all other exception types, but print them to stderr
+    print('Ignoring exception in command {}:'.format(
+        ctx.command), file=sys.stderr)
+
+    traceback.print_exception(
+        type(error), error, error.__traceback__, file=sys.stderr)
+
 
 def setup(bot):
     bot.add_listener(on_command_error)
+
 
 def teardown(bot):
     bot.remove_listener(on_command_error)

@@ -14,7 +14,7 @@ with open('config.json') as config_file:
     config = json.load(config_file)
 
 # bot initialization
-bot = discordbot.Bot(perm_path='perms.json',
+bot = discordbot.Bot(database=db, perm_path='perms.json',
                      command_prefix=config['bot_prefix'], case_insensitive=True)
 bot.add_check(discordbot.PermCheck)
 
