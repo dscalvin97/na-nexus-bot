@@ -19,12 +19,12 @@ async def on_command_error(ctx, error):
 
     elif isinstance(error, commands.NoPrivateMessage):
         try:
-            return await ctx.author.send(f'{ctx.command} can not be used in Private Messages.')
+            return await ctx.send(f'{ctx.command} can not be used in Private Messages.')
         except:
             pass
 
     elif isinstance(error, commands.BadArgument):
-        return await ctx.author.send(f'You had faulty arguments. Use !help to see correct usage.')
+        return await ctx.send(f'You had faulty arguments. Use {ctx.bot.command_prefix}help command to see correct usage.')
 
     elif isinstance(error, commands.CheckFailure):
         return await ctx.send('You have insufficient permission to run this command.')

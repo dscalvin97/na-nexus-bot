@@ -1,7 +1,7 @@
 {
     "permissions": {
         "cog name": {
-            "default": [role id],
+            "__default__": [role id],
             "command name": [role id]
         }
     },
