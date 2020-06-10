@@ -1,38 +1,43 @@
 import discord
-import json
+from tinydb import TinyDB, Query
 
 from discord.ext import commands
 
+
 def PermCheck(ctx):
+    # override for owner in case of error
+    if commands.is_owner():
+        return true
+
+    # get permissions tables
+    commands = ctx.bot.db.table('command-permissions')
+    cogs = ctx.bot.db.table('cog-permissions')
+    overrides = ctx.bot.db.table('permission-overrides')
+    Cog, Command, Override = Query()
+
     # get authorized roles
-    cog_perms = ctx.bot.perms['cogs'][ctx.command.cog_name] if ctx.command.cog_name else ctx.bot.perms['cogs']['__default__']
-    authorized_roles = set(cog_perms[ctx.command.name] if ctx.command.name in cog_perms else cog_perms['__default__'])
+    command_perms = commands.get(Command.name == ctx.command.name)
+    if not command_perms:
+        command_perms = cogs.get(Cog.name == ctx.command.cog_name)
+    authorized_roles = set(command_perms.roles)
 
     # if there are no roles, allow anyone
-    if not authorized_roles: return True
+    if not authorized_roles:
+        return True
 
     # get the author's roles
     author_roles = set([role.id for role in ctx.message.author.roles])
 
     # get whitelist values
-    try:
-        author_roles.update(ctx.bot.perms['whitelist'][str(ctx.message.author.id)])
-    except KeyError:
-        pass
+    author_overrides = overrides.get(Override.user == ctx.message.author.id)
+    author_roles.update(author_overrides.roles)
 
     # return True if there is an intersection with the authorized roles
     return bool(authorized_roles.intersection(author_roles))
 
-class Bot(commands.Bot):
-    def __init__(self, command_prefix, perm_path=None, help_command=commands.bot._default, description=None, **options):
-        super().__init__(command_prefix, help_command=help_command, description=description, **options)
-        self.perm_path = perm_path
-        self.load_perms()
 
-    def load_perms(self):
-        with open(self.perm_path) as f:
-            self.perms = json.load(f)
-    
-    def save_perms(self):
-        with open(self.perm_path, 'w') as f:
-            json.dump(self.perms, f)
+class Bot(commands.Bot):
+    def __init__(self, database: TinyDB, command_prefix, help_command=commands.bot._default, description=None, **options):
+        super().__init__(command_prefix, help_command=help_command,
+                         description=description, **options)
+        self.db = database

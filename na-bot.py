@@ -1,5 +1,6 @@
 import discord
 import json
+from tinydb import TinyDB
 import traceback
 import sys
 import asyncio
@@ -7,12 +8,14 @@ import asyncio
 import discordbot
 
 
-# load config file
+# load config file and database
+db = TinyDB('database.json')
 with open('config.json') as config_file:
     config = json.load(config_file)
 
 # bot initialization
-bot = discordbot.Bot(perm_path='perms.json', command_prefix=config['bot_prefix'], case_insensitive=True)
+bot = discordbot.Bot(perm_path='perms.json',
+                     command_prefix=config['bot_prefix'], case_insensitive=True)
 bot.add_check(discordbot.PermCheck)
 
 # list of extensions to be loaded
