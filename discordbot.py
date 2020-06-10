@@ -5,7 +5,7 @@ from discord.ext import commands
 
 def PermCheck(ctx):
     # get authorized roles
-    cog_perms = ctx.bot.perms['cogs'][ctx.command.cog_name]
+    cog_perms = ctx.bot.perms['cogs'][ctx.command.cog_name] if ctx.command.cog_name else ctx.bot.perms['cogs']['__default__']
     authorized_roles = set(cog_perms[ctx.command.name] if ctx.command.name in cog_perms else cog_perms['__default__'])
 
     # if there are no roles, allow anyone

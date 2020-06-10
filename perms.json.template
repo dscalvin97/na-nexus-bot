@@ -1,5 +1,9 @@
 {
-    "permissions": {
+    "cogs": {
+        "__default__": {
+            "__default__": [role id],
+            "command name w/o cog": [role id]
+        }
         "cog name": {
             "__default__": [role id],
             "command name": [role id]
