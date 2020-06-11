@@ -1,5 +1,8 @@
 {
     "token": "your bot token",
-    "bot_prefix": "bot command prefix",
-    "extensions": ["your list of extensions"]
+    "bot-prefix": "bot command prefix",
+    "extensions": ["your list of extensions"],
+    "extension-data": {
+        "extension name": {"whatever": "arbitrary json"}
+    }
 }
