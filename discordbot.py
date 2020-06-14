@@ -10,9 +10,9 @@ def PermCheck(ctx):
         return True
 
     # get permissions tables
-    command_perms = ctx.bot.db.table('command-permissions')
-    cogs = ctx.bot.db.table('cog-permissions')
-    overrides = ctx.bot.db.table('permission-overrides')
+    command_perms = ctx.bot.db.table('permissions-command')
+    cogs = ctx.bot.db.table('permissions-cogs')
+    overrides = ctx.bot.db.table('permissions-overrides')
 
     # get authorized roles and allow anyone if there are none
     command = command_perms.get(where('name') == ctx.command.name)

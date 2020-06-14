@@ -18,7 +18,7 @@ class PermConfig(commands.Cog):
             member: Member to set whitelist roles.
             roles: Roles to whitelist.
         """
-        overrides = ctx.bot.db.table('permission-overrides')
+        overrides = ctx.bot.db.table('permissions-overrides')
         overrides.upsert({'user': member.id, 'roles': [
                          role.id for role in roles]}, where('user') == member.id)
 
@@ -33,7 +33,7 @@ class PermConfig(commands.Cog):
             roles: Roles to grant permission. If you specify none, any member can run the command.
         """
         command = ctx.bot.get_command(command_name)
-        command_perms = ctx.bot.db.table('command-permissions')
+        command_perms = ctx.bot.db.table('permissions-commands')
         if command:
             command_perms.upsert(
                 {'name': command.name, 'roles': [role.id for role in roles]}, where('name') == command.name)
@@ -51,7 +51,7 @@ class PermConfig(commands.Cog):
             roles: Roles to grant permission. If you specify none, any member can run the command.
         """
         cog = ctx.bot.get_cog(cog_name)
-        cog_perms = ctx.bot.db.table('cog-permissions')
+        cog_perms = ctx.bot.db.table('permissions-cogs')
         if cog:
             cog_perms.upsert(
                 {'name': cog.qualified_name, 'roles': [role.id for role in roles]}, where('name') == cog.qualified_name)

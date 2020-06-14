@@ -15,7 +15,7 @@ with open('config.json') as config_file:
 
 # bot initialization
 bot = discordbot.Bot(database=db, perm_path='perms.json',
-                     command_prefix=config['bot_prefix'], case_insensitive=True)
+                     command_prefix=config['bot-prefix'], case_insensitive=True)
 bot.add_check(discordbot.PermCheck)
 
 # list of extensions to be loaded
