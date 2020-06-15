@@ -4,6 +4,8 @@ import asyncio
 from discord.ext import commands
 
 # manage extensions that contain commands, cogs and listeners used by the bot in runtime
+
+
 class ExtensionManager(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

@@ -128,8 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# for config and other data files
-*.json
+# config and database files
+config.json
+database.json
 
 # VS Code
 .vscode/

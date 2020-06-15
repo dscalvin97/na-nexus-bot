@@ -3,17 +3,19 @@ from discord.ext import commands
 import asyncio
 
 # interactions with those who have newly joined the server
+
+
 class GreetNewUser(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.last_member = None
 
-    greetChannel=0
-    
+    greetChannel = 0
+
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        welcome_message=f"Hi there {member.name}!! We're glad to have you join us at Nexus Aurora :)"
-        
+        welcome_message = f"Hi there {member.name}!! We're glad to have you join us at Nexus Aurora :)"
+
         # greets members via DMs when they join
         try:
             await member.send(welcome_message)
@@ -26,9 +28,8 @@ class GreetNewUser(commands.Cog):
 
     @commands.command(aliases=['setgreet'])
     async def SetWelcomeChannel(self, ctx):
-        self.greetChannel=ctx.message.channel.id
+        self.greetChannel = ctx.message.channel.id
 
 
 def setup(bot):
     bot.add_cog(GreetNewUser(bot))
-    
