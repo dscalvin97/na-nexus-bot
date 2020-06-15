@@ -15,12 +15,9 @@ class EmbedDetection(commands.Cog):
 
         if type == "add":
             if not (channel is None):
-                try:
-                    self.channel_whitelist.insert({'channel-name': channel.name, 'channel-id': channel.id})
-                    await ctx.send(f"{channel.name} Has Been Added To The DataBase!")
-                except:
-                    await ctx.send("Channel Not Found")
-                    pass
+                self.channel_whitelist.insert({'channel-name': channel.name, 'channel-id': channel.id})
+                await ctx.send(f"{channel.name} Has Been Added To The DataBase!")
+
         elif type == "remove":
             remove_query = Query()
             try:
