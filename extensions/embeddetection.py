@@ -1,3 +1,5 @@
+import asyncio
+
 import discord
 from discord.ext import commands
 from tinydb import Query, where
@@ -40,6 +42,10 @@ class EmbedDetection(commands.Cog):
                                              value=f"Our System has detected that you have sent a message containing an {ext} file, if you are a 3D artist,please use CHANNEL or show your work to USER!")
                         await message.author.send(embed=dm_message)
 
+                        bot_message = await message.channel.send(
+                            f"Hey {message.author.mention},it appears you have sent a {ext} file,in the wrong channel :smile:!")
+                        await asyncio.sleep(30)
+                        await bot_message.delete()
 
 def setup(bot):
     bot.add_cog(EmbedDetection(bot))
