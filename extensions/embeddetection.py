@@ -1,51 +1,38 @@
 import asyncio
 
 import discord
+from discord import Embed
 from discord.ext import commands
-from tinydb import Query, where
 
 
 class EmbedDetection(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.channel_whitelist = bot.db.table('embeddetection')
-
+        self.channel_embed_information = bot.db.table("embeddetection")
 
     @commands.command()
-    async def whitelist(self, ctx, type, channel: discord.TextChannel = None):
-
-        if type == "add":
-            if not (channel is None):
-                self.channel_whitelist.insert({'channel-name': channel.name, 'channel-id': channel.id})
-                await ctx.send(f"{channel.name} Has Been Added To The DataBase!")
-
-        elif type == "remove":
-            remove_query = Query()
-            try:
-                self.channel_whitelist.remove(remove_query['channel-name'].search(channel.name))
-                await ctx.send(f"channel {channel.name} has been removed!")
-            except:
-                await ctx.send("Channel Not Found In Database")
+    async def add_embed(self, ctx, channel: discord.TextChannel, value):
+        # channel = channel in which embed should be sent,domain= the department in which the embed should be sent,value = message to be shown
+        self.channel_embed_information.insert({"channel-id": channel.id, "value": value})
+        await ctx.message.add_reaction('✅')
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        pic_ext = ['.jpg', '.png', '.jpeg']
+        if message.attachments != []:
+            for ext in pic_ext:
+                attach = str(message.attachments[0])
+                if attach.endswith(f"{ext}\'>"):
+                    for entry in self.channel_embed_information.all():
+                        if entry['channel-id'] == message.channel.id:
+                            embed_to_be_sent = Embed(title="Embed Detected!", color=0xff0000)
+                            embed_to_be_sent.add_field(name=f"Dearest {message.author.name},", value=entry['value'])
+                            MessageInChat = await message.channel.send(embed=embed_to_be_sent)
+                            await message.author.send(embed=embed_to_be_sent)
+                            await asyncio.sleep(90)
+                            await MessageInChat.delete()
 
-        if self.channel_whitelist.get(where('channel-id') != message.channel.id):
-            pic_ext = ['.jpg', '.png', '.jpeg']
-            if message.attachments != []:
-                for ext in pic_ext:
-                    attach = str(message.attachments[0])
-                    if attach.endswith(f"{ext}\'>"):
-                        dm_message = discord.Embed(title="Embed Detected!", color=0xff0000)
-                        dm_message.add_field(name="Attention:",
-                                             value=f"Our System has detected that you have sent a message containing an {ext} file, if you are a 3D artist,please use CHANNEL or show your work to USER!")
-                        await message.author.send(embed=dm_message)
-
-                        bot_message = await message.channel.send(
-                            f"Hey {message.author.mention},it appears you have sent a {ext} file,in the wrong channel :smile:!")
-                        await asyncio.sleep(30)
-                        await bot_message.delete()
 
 def setup(bot):
     bot.add_cog(EmbedDetection(bot))
