@@ -7,27 +7,6 @@ from tinydb import where
 from tinydb.operations import add, subtract
 
 
-# commands to get statistical data for roles
-class RoleStatistics(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
-
-    # post an embed with a count of members in all roles for the server
-    @commands.command()
-    async def RoleCount(self, ctx):
-        embed = discord.Embed(title="Roles", color=0x7289DA)
-
-        for role in ctx.guild.roles:
-            role_name = role.name
-
-            if role.name == "@everyone":
-                role_name = "Total members"
-
-            embed.add_field(name=f"{role_name} :", inline=True, value=len(role.members))
-
-        await ctx.send(embed=embed)
-
-
 # handles manual and self role assignment
 class RoleManagement(commands.Cog):
     def __init__(self, bot):
@@ -231,12 +210,7 @@ class RoleManagement(commands.Cog):
                 )
 
 
-def last_cmd_call(ctx):
-    return True
-
-
 def setup(bot):
-    bot.add_cog(RoleStatistics(bot))
     bot.add_cog(RoleManagement(bot))
 
 
