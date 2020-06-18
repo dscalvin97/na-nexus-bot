@@ -39,7 +39,8 @@ def PermCheck(ctx):
 
 
 class Bot(commands.Bot):
-    def __init__(self, database: TinyDB, command_prefix, help_command=commands.bot._default, description=None, **options):
+    def __init__(self, database: TinyDB, config: dict, command_prefix, help_command=commands.bot._default, description=None, **options):
         super().__init__(command_prefix, help_command=help_command,
                          description=description, **options)
         self.db = database
+        self.config = config
