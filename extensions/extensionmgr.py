@@ -3,54 +3,58 @@ import asyncio
 
 from discord.ext import commands
 
+
 # manage extensions that contain commands, cogs and listeners used by the bot in runtime
-
-
 class ExtensionManager(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.last_extension_reloaded = ''
 
-    # Load an inactive extension
+    # loads an extension
     @commands.command()
-    async def LoadExtension(self, ctx, extName):
-        await ctx.message.channel.send(f'`Loading Extension {extName}`')
+    async def LoadExtension(self, ctx, extension_name):
+        await ctx.message.channel.send(f'`Loading Extension {extension_name}`')
 
         try:
-            self.bot.load_extension(extName)
-            return await ctx.message.channel.send(f'`{extName} loaded`')
+            self.bot.load_extension(extension_name)
+            return await ctx.message.channel.send(f'`{extension_name} loaded`')
         except Exception as e:
-            return await ctx.message.channel.send(f'`Failed to load Extension {extName}\n{e}`')
+            return await ctx.message.channel.send(f'`Failed to load Extension {extension_name}\n{e}`')
 
-    # Unload an active extension
+    # unloads an extension
     @commands.command()
-    async def UnloadExtension(self, ctx, extName):
-        await ctx.message.channel.send(f'`Unloading Extension {extName}`')
+    async def UnloadExtension(self, ctx, extension_name):
+        await ctx.message.channel.send(f'`Unloading Extension {extension_name}`')
 
         try:
-            extension = self.bot.extensions.index(extName)
-            self.bot.unload_extension(extension)
-            return await ctx.message.channel.send(f'`{extName} unloaded`')
+            self.bot.unload_extension(extension_name)
+            return await ctx.message.channel.send(f'`{extension_name} unloaded`')
         except Exception as e:
-            return await ctx.message.channel.send(f'`Failed to unload Extension {extName}\n{e}`')
+            return await ctx.message.channel.send(f'`Failed to unload Extension {extension_name}\n{e}`')
 
-    # Reloads an extension
+    # reloads an extension
     @commands.command(aliases=['reload', 'reloadext', 'extreload'])
-    async def ReloadExtension(self, ctx, extensionName):
-        await ctx.message.channel.send(f'`Reloading Extension {extensionName}`')
+    async def ReloadExtension(self, ctx, extension_name=''):
+        await ctx.message.channel.send(f'`Reloading Extension {extension_name}`')
 
-        for extension in self.bot.extensions:
-            if extension == extensionName:
-                try:
-                    self.bot.reload_extension(extension)
-                    return await ctx.message.channel.send(f'`{extensionName} reloaded`')
-                except Exception as e:
-                    return await ctx.message.channel.send(f'`Failed to reload Extension {extensionName}\n{e}`')
+        if extension_name == '':
+            if self.last_extension_reloaded != '':
+                extension_name = self.last_extension_reloaded
+            else:
+                return await ctx.send('Please mention the extension name as no extension has been reloaded previously in this instance.')
 
-    # Send list of active extensions in channel
+        try:
+            self.bot.reload_extension(extension_name)
+            self.last_extension_reloaded = extension_name
+            return await ctx.send(f'`{extension_name} reloaded`')
+        except Exception as e:
+            return await ctx.send(f'`Failed to reload Extension {extension_name}\n{e}`')
+
+    # send list of active extensions in channel
     @commands.command(aliases=['extensions'])
     async def PrintExtList(self, ctx):
         separator = '\n'
-        await ctx.channel.send(separator.join(self.bot.extensions))
+        await ctx.channel.send(f'`{separator.join(self.bot.extensions)}`')
 
 
 def setup(bot):
