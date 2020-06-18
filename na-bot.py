@@ -1,12 +1,11 @@
-import discord
 import json
-from tinydb import TinyDB
-import traceback
 import sys
-import asyncio
+import traceback
+
+import discord
+from tinydb import TinyDB
 
 import discordbot
-
 
 # load config file and database
 db = TinyDB('database.json')
@@ -14,7 +13,7 @@ with open('config.json') as config_file:
     config = json.load(config_file)
 
 # bot initialization
-bot = discordbot.Bot(database=db, perm_path='perms.json',
+bot = discordbot.Bot(database=db, config=config, perm_path='perms.json',
                      command_prefix=config['bot-prefix'], case_insensitive=True)
 bot.add_check(discordbot.PermCheck)
 
@@ -27,15 +26,15 @@ if __name__ == '__main__':
         try:
             bot.load_extension(extension)
             print(f'{extension} loaded')
-        except Exception as e:
-            print(f'Failed to load extension {extension}', file=sys.stderr)
+        except Exception as exception:
+            print(f'Failed to load extension {extension}\n{exception}', file=sys.stderr)
             traceback.print_exc()
 
 
 @bot.event
 async def on_ready():
     print(f'Logged in as: {bot.user.name}\nWith ID: {bot.user.id}')
-    return await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='for howls of pain'))
+    return await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='for an opportunity to SPAYM'))
 
 TOKEN = config['token']
 

@@ -77,8 +77,10 @@ Configuration for the bot is stored in [config.json](./config.json.template). Ke
 {
     "token": "your bot token",
     "bot-prefix": "bot command prefix",
+    "guild-id": your guild id,
     "extensions": ["your list of extensions"],
     "extension-data": {
+        "rolemgr": {"role-setup-channel-id": 0},
         "extension name": {"whatever": "arbitrary json"}
     }
 }
